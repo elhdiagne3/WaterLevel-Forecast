@@ -12,7 +12,7 @@ library(ggplot2, plotly)
 library(SparkR)
 library(RSQLite)
 #####Data_base_connexion
-connStr <- paste("Server= imar-sql",
+connStr <- paste("Server= my_company-sql-server",
                  "UserName = ediagne", 
                  "Password = Wddd#807",
                  "Driver = {SQL Server}", 
@@ -51,7 +51,7 @@ missmap(predictions, main = "Graphiaue des valeurs manqantes")
 ### Traitement Datafetch
 ### Traitement Diffstations
 ### Traitement Hiloes
-         ### Extraction de l'annÈe et du mois dans la variable Time
+         ### Extraction de l'ann√©e et du mois dans la variable Time
 hiloes$Year<-substr(hiloes$Time, 1,4)
 hiloes$month<-substr(hiloes$Time, 6,7)
         ###Visualisation
@@ -106,7 +106,7 @@ obs_19<-observation[(substr(observation$Time,1,4) == 2019),]
 obs_20<-observation[(substr(observation$Time,1,4) == 2020)  & observation$Id<=1774868,]
                     #& substr(observation$Time,1,10) != "2020-03-15" 
                     #& substr(observation$Time,1,10) !="2020-03-14",] ## Laisser le jour 14 pour 
-## PrÈvision l'usage du niveau d'eau moyen par jour
+## Pr√©vision l'usage du niveau d'eau moyen par jour
 obs_20$date<-substr(obs_20$Time, 1,10)
   obs_20J<-obs_20 %>% 
     group_by(date) %>% 
@@ -114,13 +114,13 @@ obs_20$date<-substr(obs_20$Time, 1,10)
 ts1<-ts(obs_20J$mean_wl,)
 fit1<-auto.arima((ts1))
 pred1<-forecast(fit1, 5)
-autoplot(pred1, main = "PrÈdiction du niveau d'eau moyen des 5 prochains jour")
-observÈes1<-xts(pred1$x, order.by = obs_20J$Time)
-ajustÈes1<-xts(pred1$fitted, order.by = obs_20J$Time)
-my_data1<-cbind(observÈes1,ajustÈes1)
+autoplot(pred1, main = "Pr√©diction du niveau d'eau moyen des 5 prochains jour")
+observ√©es1<-xts(pred1$x, order.by = obs_20J$Time)
+ajust√©es1<-xts(pred1$fitted, order.by = obs_20J$Time)
+my_data1<-cbind(observ√©es1,ajust√©es1)
 dygraph(my_data1) %>% browsable(tagList(dyg)) %>% dyOptions(colors = brewer.pal(2,"Set2"))
 ##############################################################
-## PrÈvision l'usage du niveau d'eau moyen par heure
+## Pr√©vision l'usage du niveau d'eau moyen par heure
 obs_20$date1<-substr(obs_20$Time,1, 13)
 obs_20H<-obs_20 %>% 
   group_by(date1) %>% 
@@ -128,12 +128,12 @@ obs_20H<-obs_20 %>%
 ts2<-ts(obs_20H$mean_wl1)
 fit2<-auto.arima((ts2))
 pred2<-forecast(fit2, 24)
-autoplot(pred2, main = "PrÈdiction du niveau d'eau moyen des prochaines 24 heures")
-observÈes2<-xts(pred2$x, order.by = obs_20H$Time)
-ajustÈes2<-xts(pred2$fitted, order.by = obs_20H$Time)
-my_data2<-cbind(observÈes2,ajustÈes2)
-dygraph(my_data2, main= "DonnÈes observÈes et predites de l'Èlevation du niveau d'eau mars 2020") %>% browsable(tagList(dyg)) %>% dyOptions(colors = brewer.pal(2,"Set2"))
-## PrÈvision l'usage du niveau d'eau 3 par mn##############
+autoplot(pred2, main = "Pr√©diction du niveau d'eau moyen des prochaines 24 heures")
+observ√©es2<-xts(pred2$x, order.by = obs_20H$Time)
+ajust√©es2<-xts(pred2$fitted, order.by = obs_20H$Time)
+my_data2<-cbind(observ√©es2,ajust√©es2)
+dygraph(my_data2, main= "Donn√©es observ√©es et predites de l'√©levation du niveau d'eau mars 2020") %>% browsable(tagList(dyg)) %>% dyOptions(colors = brewer.pal(2,"Set2"))
+## Pr√©vision l'usage du niveau d'eau 3 par mn##############
 obs1<-observation
 obs1$date2<-substr(obs1$Time, 1, 16)
 obs_20m<-obs1 %>%
@@ -143,15 +143,15 @@ ts3<-ts(obs_20m$mean_wl3)
 fit3<-auto.arima((ts3))
 pred3<-forecast(fit3, 10)
 summary(pred3)
-observÈes3<-xts(pred3$x, order.by = obs_20m$Time)
-ajustÈes3<-xts(pred3$fitted, order.by = obs_20m$Time)
+observ√©es3<-xts(pred3$x, order.by = obs_20m$Time)
+ajust√©es3<-xts(pred3$fitted, order.by = obs_20m$Time)
 #SHC<-xts(pred3$x, order.by = obs_20m$Time)
-my_data<-cbind(observÈes3,ajustÈes3)
+my_data<-cbind(observ√©es3,ajust√©es3)
 dygraph(my_data) %>% browsable(tagList(dyg)) %>% dyOptions(colors = brewer.pal(3,"Dark2"))%>%dyRangeSelector()
 
 dygraph<- list(
-  dygraph(my_data2, main = "ModËle2 (mape = 4.67)"),
-  dygraph(my_data, main = "ModËle3 (mape = 0.75)")
+  dygraph(my_data2, main = "Mod√®le2 (mape = 4.67)"),
+  dygraph(my_data, main = "Mod√®le3 (mape = 0.75)")
 )
 browsable(tagList(dygraph)) 
 ###### Ajout des infos de la prediction SHC
